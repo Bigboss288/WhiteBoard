@@ -1,0 +1,56 @@
+.notes-container {
+    position: absolute;
+    width: 19rem;
+    height: 20rem;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    user-select: none;
+    font-family: Arial, sans-serif;
+}
+
+.notes-container>div:first-child {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    background-color: #f4f4f4;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    border-radius: 8px 8px 0 0;
+    cursor: grab;
+}
+
+.notes-container button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.notes-container img {
+    height: 20px;
+    width: 20px;
+}
+
+.notes-container>div:nth-child(2) {
+    flex: 1;
+    padding: 15px;
+    display: flex;
+    align-items: flex-start;
+    /* Ensure top alignment of content */
+}
+
+
+.editor {
+    height: 100%;
+    width: 100%;
+    border: none;
+    font-size: 0.9rem;
+    overflow-y: auto;
+    outline: none;
+}
