@@ -16,9 +16,18 @@ const Canvas = () => {
     const [elementType, setElementType] = useState<string>("");
     const [color, setColor] = useState<string>("black");
     const [isNoteVisible, setNoteVisible] = useState<boolean>(false)
+    const [dimensions, setDimensions] = useState<{height: number, width: number}>({ height: 0, width: 0 });
 
-    const height = window.innerHeight
-    const width = window.innerWidth
+    useEffect(() => {
+        const height = window.innerHeight
+        const width = window.innerWidth
+
+        setDimensions({
+            height: height,
+            width: width
+        })
+    
+    },[])
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -97,8 +106,8 @@ const Canvas = () => {
             {isNoteVisible && <Notes deleteNote={() => setNoteVisible(false)} />}
             <canvas id="canvas"
                 ref={canvasRef}
-                height={height}
-                width={width}
+                height={dimensions.height}
+                width={dimensions.width}
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}></canvas>

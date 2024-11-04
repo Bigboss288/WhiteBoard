@@ -9,11 +9,57 @@ interface NoteProps {
 
 const Notes: React.FC<NoteProps> = ({ deleteNote }) => {
   const noteRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLTextAreaElement>(null);
   const headRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [position, setPosition] = useState({ x: 950, y: 200 });
   const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
   const [text, setText] = useState(""); // State for textarea content
+  const ws = useRef<WebSocket | null>(null);
+
+  ws.current = new WebSocket('ws://localhost:8080');
+
+  useEffect(() => {
+    // Initialize WebSocket connection
+     // Replace with your WebSocket server URL
+
+    // Handle incoming messages from the server
+    ws.current!.onmessage = (event) => {
+        const blob = event.data;
+        if (blob instanceof Blob) {
+            const reader = new FileReader();
+            
+            reader.onload = () => {
+                const newContent = reader.result as string;
+                if (textRef.current && textRef.current.value !== newContent) {
+                    textRef.current.value = newContent;
+                }
+            };
+
+            reader.readAsText(blob);
+        }
+    };
+
+    // Connection open handler
+    ws.current!.onopen = () => {
+        console.log('Connected to WebSocket server');
+    };
+
+    // Error handling
+    ws.current!.onerror = (error: Event) => {
+        console.log('WebSocket Error:', error);
+    };
+
+    // Connection close handler
+    ws.current!.onclose = () => {
+        console.log('Disconnected from WebSocket server');
+    };
+
+    // Cleanup WebSocket connection on component unmount
+    return () => {
+        ws.current?.close();
+    };
+}, []);
 
   useEffect(() => {
     const mouseUp = () => setIsDragging(false);
@@ -57,12 +103,11 @@ const Notes: React.FC<NoteProps> = ({ deleteNote }) => {
     });
   };
 
-  // const deleteNote = (event: React.MouseEvent<HTMLButtonElement>) => {
-  //   event.stopPropagation();
-  // };
-
   const handleTextChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setText(event.target.value); // Update the text state
+    const content = textRef.current!.value
+    const blob = new Blob([content], { type: 'text/plain' });
+    ws.current!.send(blob);
   };
 
   return (
@@ -82,6 +127,7 @@ const Notes: React.FC<NoteProps> = ({ deleteNote }) => {
       <div>
         <textarea
           className="editor"
+          ref={textRef}
           value={text}
           onChange={handleTextChange} // Set the text change handler
           placeholder="Write your note here..."
