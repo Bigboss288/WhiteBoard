@@ -1,10 +1,19 @@
 "use client"
 
 import React, { useRef, useState, useEffect } from "react";
+// import io from "socket.io-client"
 import "./note.css";
+
+
+// const socket = io('http://localhost:4000')           //socket logic
 
 interface NoteProps {
   deleteNote : (element: void) => void
+}
+
+const initialPos = {
+  x: window.innerWidth - 330,
+  y: window.innerHeight - 351
 }
 
 const Notes: React.FC<NoteProps> = ({ deleteNote }) => {
@@ -12,54 +21,21 @@ const Notes: React.FC<NoteProps> = ({ deleteNote }) => {
   const textRef = useRef<HTMLTextAreaElement>(null);
   const headRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [position, setPosition] = useState({ x: 950, y: 200 });
+  const [position, setPosition] = useState({x: initialPos.x, y: initialPos.y });
   const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
   const [text, setText] = useState(""); // State for textarea content
-  const ws = useRef<WebSocket | null>(null);
 
-  ws.current = new WebSocket('ws://localhost:8080');
 
-  useEffect(() => {
-    // Initialize WebSocket connection
-     // Replace with your WebSocket server URL
 
-    // Handle incoming messages from the server
-    ws.current!.onmessage = (event) => {
-        const blob = event.data;
-        if (blob instanceof Blob) {
-            const reader = new FileReader();
-            
-            reader.onload = () => {
-                const newContent = reader.result as string;
-                if (textRef.current && textRef.current.value !== newContent) {
-                    textRef.current.value = newContent;
-                }
-            };
+//   useEffect(() => {                                  //socket logic
+//     socket.on('textUpdate', (data: string) => {
+//       setText(data);
+//     });
 
-            reader.readAsText(blob);
-        }
-    };
-
-    // Connection open handler
-    ws.current!.onopen = () => {
-        console.log('Connected to WebSocket server');
-    };
-
-    // Error handling
-    ws.current!.onerror = (error: Event) => {
-        console.log('WebSocket Error:', error);
-    };
-
-    // Connection close handler
-    ws.current!.onclose = () => {
-        console.log('Disconnected from WebSocket server');
-    };
-
-    // Cleanup WebSocket connection on component unmount
-    return () => {
-        ws.current?.close();
-    };
-}, []);
+//     return () => {
+//       socket.off('textUpdate');
+//     };
+// }, []);
 
   useEffect(() => {
     const mouseUp = () => setIsDragging(false);
@@ -104,10 +80,10 @@ const Notes: React.FC<NoteProps> = ({ deleteNote }) => {
   };
 
   const handleTextChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setText(event.target.value); // Update the text state
-    const content = textRef.current!.value
-    const blob = new Blob([content], { type: 'text/plain' });
-    ws.current!.send(blob);
+    const newText = event.target.value
+    setText(newText); // Update the text state
+    console.log(text)
+    // socket.emit('textChange', newText);                       //socket logic
   };
 
   return (

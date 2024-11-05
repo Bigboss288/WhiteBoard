@@ -8,6 +8,8 @@ import Notes from '../note/Note';
 import html2canvas from 'html2canvas';
 
 
+
+
 const Canvas = () => {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const [elements, setElement, undo] = useHistory<Element[]>([]);
