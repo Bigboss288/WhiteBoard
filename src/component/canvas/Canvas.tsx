@@ -18,18 +18,18 @@ const Canvas = () => {
     const [elementType, setElementType] = useState<string>("");
     const [color, setColor] = useState<string>("black");
     const [isNoteVisible, setNoteVisible] = useState<boolean>(false)
-    const [dimensions, setDimensions] = useState<{height: number, width: number}>({ height: 0, width: 0 });
+    const [dimensions, setDimensions] = useState<{ height: number, width: number }>({ height: 0, width: 0 });
 
     useEffect(() => {
-        const height = window.innerHeight
-        const width = window.innerWidth
 
-        setDimensions({
-            height: height,
-            width: width
-        })
-    
-    },[])
+        if (typeof window !== "undefined") {
+            setDimensions({
+                height: window.innerHeight,
+                width: window.innerWidth
+            })
+        }
+
+    }, [])
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -100,7 +100,7 @@ const Canvas = () => {
             <Panel
                 set_color={(color) => setColor(color)}
                 set_element={(element) => setElementType(element)}
-                open_note={() => setNoteVisible(true)}
+                open_note={() => setNoteVisible(!isNoteVisible)}
                 undo={undo}
                 clear_screen={() => clearScreen()}
                 take_screenshot={() => takeScreenshot()}
@@ -142,8 +142,8 @@ const createElement = (
 
     } else if (elementType === "circle") {
         canvasElement = {
-            x: x1 ,
-            y: y1 ,
+            x: x1,
+            y: y1,
             radius: Math.abs(x2 - x1) * 2,
             fillColor: 'white',
             borderColor: color,

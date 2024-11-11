@@ -8,34 +8,49 @@ import "./note.css";
 // const socket = io('http://localhost:4000')           //socket logic
 
 interface NoteProps {
-  deleteNote : (element: void) => void
+  deleteNote: (element: void) => void
 }
 
-const initialPos = {
-  x: window.innerWidth - 330,
-  y: window.innerHeight - 351
-}
+
 
 const Notes: React.FC<NoteProps> = ({ deleteNote }) => {
   const noteRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLTextAreaElement>(null);
   const headRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [position, setPosition] = useState({x: initialPos.x, y: initialPos.y });
+  const [position, setPosition] = useState({ x: 0, y: 0 });
   const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
   const [text, setText] = useState(""); // State for textarea content
 
 
 
-//   useEffect(() => {                                  //socket logic
-//     socket.on('textUpdate', (data: string) => {
-//       setText(data);
-//     });
+  //   useEffect(() => {                                  //socket logic
+  //     socket.on('textUpdate', (data: string) => {
+  //       setText(data);
+  //     });
 
-//     return () => {
-//       socket.off('textUpdate');
-//     };
-// }, []);
+  //     return () => {
+  //       socket.off('textUpdate');
+  //     };
+  // }, []);
+
+  useEffect(() => {
+
+    if (typeof window !== "undefined") {
+      const updatePosition = () => {
+        setPosition({
+          x: window.innerWidth - 330,
+          y: window.innerHeight - 351
+        })
+      }
+
+      updatePosition()
+
+      window.addEventListener('resize', updatePosition);
+
+      return () => window.removeEventListener('resize', updatePosition);
+    }
+  },[])
 
   useEffect(() => {
     const mouseUp = () => setIsDragging(false);
