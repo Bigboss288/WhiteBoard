@@ -18,7 +18,7 @@ const Notes: React.FC<NoteProps> = ({ deleteNote }) => {
   const textRef = useRef<HTMLTextAreaElement>(null);
   const headRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [position, setPosition] = useState<{ x: number; y: number } | null>(null);
   const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
   const [text, setText] = useState(""); // State for textarea content
 
@@ -84,6 +84,10 @@ const Notes: React.FC<NoteProps> = ({ deleteNote }) => {
     };
   }, [isDragging, mouseOffset]);
 
+  if (position === null) {
+    return null; // Don't render until position is set
+  }
+
   const mouseDown = (event: React.MouseEvent<HTMLDivElement>) => {
     setIsDragging(true);
 
@@ -105,7 +109,7 @@ const Notes: React.FC<NoteProps> = ({ deleteNote }) => {
     <div
       className="notes-container"
       ref={noteRef}
-      style={{ left: `${position.x}px`, top: `${position.y}px` }}
+      style={{ left: position?.x, top: position?.y }}
     >
       <div ref={headRef} onMouseDown={mouseDown}>
         <button onClick={() => deleteNote()}>
