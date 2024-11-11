@@ -1,4 +1,5 @@
 "use client"
+
 import React, { useEffect, useState } from 'react'
 import './panel.css'
 import ColorPicker from 'react-pick-color'

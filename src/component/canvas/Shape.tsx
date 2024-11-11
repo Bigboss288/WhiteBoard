@@ -1,3 +1,5 @@
+"use client"
+
 export type Element = {
     x1: number;
     y1: number;
