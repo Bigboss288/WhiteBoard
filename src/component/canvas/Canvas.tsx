@@ -36,48 +36,88 @@ const Canvas = () => {
         const context = canvas?.getContext("2d");
         context?.clearRect(0, 0, canvas!.width, canvas!.height);
         elements.forEach(({ elementType, canvasElement }) => drawElement(context!, elementType, canvasElement));
+        console.log(drawing)
     }, [elements])
 
 
-    const handleMouseDown = (event: React.MouseEvent<HTMLCanvasElement>) => {
+    // const handleMouseDown = (event: React.MouseEvent<HTMLCanvasElement | >) => {
+    //     if (elementType === "") return;
+    //     setDrawing(true);
+
+    //     const x = event.clientX;
+    //     const y = event.clientY;
+
+    //     const element = createElement(x, y, x, y, linearPath, elementType, color);
+    //     setElement((prevstate) => [...prevstate, element]);
+    // };
+
+
+    // const handleMouseMove = (
+    //     event: React.MouseEvent<HTMLCanvasElement>,
+    // ) => {
+
+    //     if (!drawing) return;
+
+    //     // Check if there are any elements to work with
+    //     const index = elements.length - 1;
+    //     if (index < 0) return; // Exit if no elements exist
+
+    //     const { clientX, clientY } = event;
+    //     if (elementType === "pen") setLinearpath((prev) => [...prev, { x: clientX, y: clientY }]);
+
+    //     const { x1, y1 } = elements[index];
+
+    //     const updateElement: Element = createElement(x1, y1, clientX, clientY, linearPath, elementType, color);
+
+    //     const elementCopy = [...elements];
+    //     elementCopy[index] = updateElement;
+    //     setElement(elementCopy, true); // Only pass the new state here
+    // };
+
+    // const handleMouseUp = () => {
+    //     if (!drawing) return;
+
+    //     setLinearpath([]);
+    //     setDrawing(false);
+    // };
+
+    const handlePointerDown = (event: React.PointerEvent<HTMLCanvasElement>) => {
         if (elementType === "") return;
         setDrawing(true);
-
+      
+        // Pointer event contains clientX and clientY, works for both mouse and touch
         const x = event.clientX;
         const y = event.clientY;
-
+      
         const element = createElement(x, y, x, y, linearPath, elementType, color);
         setElement((prevstate) => [...prevstate, element]);
-    };
+      };
 
-    const handleMouseMove = (
-        event: React.MouseEvent<HTMLCanvasElement>,
-    ) => {
-
+    const handlePointerMove = (event: React.PointerEvent<HTMLCanvasElement>) => {
         if (!drawing) return;
-
+    
         // Check if there are any elements to work with
         const index = elements.length - 1;
         if (index < 0) return; // Exit if no elements exist
-
+      
         const { clientX, clientY } = event;
         if (elementType === "pen") setLinearpath((prev) => [...prev, { x: clientX, y: clientY }]);
-
+      
         const { x1, y1 } = elements[index];
-
+      
         const updateElement: Element = createElement(x1, y1, clientX, clientY, linearPath, elementType, color);
-
+      
         const elementCopy = [...elements];
         elementCopy[index] = updateElement;
         setElement(elementCopy, true); // Only pass the new state here
-    };
-
-    const handleMouseUp = () => {
+      };
+      
+      const handlePointerUp = () => {
         if (!drawing) return;
-
+      
         setLinearpath([]);
         setDrawing(false);
-    };
+      };
 
     const clearScreen = () => {
         const canvas = canvasRef.current;
@@ -110,9 +150,11 @@ const Canvas = () => {
                 ref={canvasRef}
                 height={dimensions.height}
                 width={dimensions.width}
-                onMouseDown={handleMouseDown}
-                onMouseMove={handleMouseMove}
-                onMouseUp={handleMouseUp}></canvas>
+                onPointerDown={handlePointerDown}
+                onPointerMove={handlePointerMove}
+                onPointerUp={handlePointerUp}
+                onPointerCancel={handlePointerUp}
+                ></canvas>
         </div>
     )
 }

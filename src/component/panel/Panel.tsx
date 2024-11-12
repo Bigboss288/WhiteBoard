@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState } from 'react'
 import './panel.css'
-import ColorPicker from 'react-pick-color'
+// import ColorPicker from 'react-pick-color'
+import { TwitterPicker } from 'react-color';
 import { ImageSrcType, imgSrc } from '@/data'
 
 interface PanelProps {
@@ -19,6 +20,7 @@ const Panel: React.FC<PanelProps> = ({set_color, set_element, open_note, undo, c
     const [colortoggle, setcolorToggle] = useState<boolean>(false)
     const [shapetoggle, setshapeToggle] = useState<boolean>(false)
     const [shapeIcon, setShapeIcon] = useState<string>(imgSrc.shape)
+    const [shape, setShape] = useState<string>("")
     const [color, setColor] = useState('#000000');
 
     useEffect(() => {
@@ -29,20 +31,27 @@ const Panel: React.FC<PanelProps> = ({set_color, set_element, open_note, undo, c
         set_element(elementType)
         setshapeToggle(!shapetoggle)
         setShapeIcon(imgSrc[elementType])
-       
+        setShape("shape")
     }
 
     const setPen = (elementType: string) => {
         set_element(elementType)
         setShapeIcon(imgSrc.shape)
+        setShape(elementType)
+        setshapeToggle(false)
+    }
+
+    const selectColor = (color : string) => {
+        setColor(color)
+        setcolorToggle(!colortoggle)
     }
 
     return (
         <div className='panel'>
             <div className='panel-container'>
                 <div>
-                    <button className="button" onClick={() => setshapeToggle(!shapetoggle)}> <img src={shapeIcon} alt="" /> </button>
-                    <button className="button" onClick={() => setPen("pen")}> <img src={imgSrc.pen} alt="" /> </button>
+                    <button className={`button ${shape === "shape" && "active"}`}  onClick={() => setshapeToggle(!shapetoggle)}> <img src={shapeIcon} alt="" /> </button>
+                    <button className={`button ${shape === "pen" && "active"}`} onClick={() => setPen("pen")}> <img src={imgSrc.pen} alt="" /> </button>
                     <button className="button" onClick={() => open_note()}> <img src={imgSrc.note} alt="" /></button>
                     <button className="button" style={{ backgroundColor: color, border: "none" }} onClick={() => setcolorToggle(!colortoggle)}></button>
                 </div>
@@ -62,11 +71,9 @@ const Panel: React.FC<PanelProps> = ({set_color, set_element, open_note, undo, c
                 {
                     colortoggle &&
                     <div className='color-wrap'>
-                        <ColorPicker color={color} onChange={color => setColor(color.hex)} />
+                        {/* <TwitterPicker color={color} onChange={color => setColor(color.hex)} /> */}
+                        <TwitterPicker color={color} onChange={color => selectColor(color.hex)}/>
                     </div>
-                }
-                {
-                    (shapetoggle || colortoggle) && <div style={{ width: "21rem"}}></div>
                 }
             </div>
         </div>
