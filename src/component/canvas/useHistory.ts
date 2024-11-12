@@ -7,7 +7,7 @@ import { useState } from "react";
 
 type SetStateAction<T> = T | ((prevState: T) => T);
 
-export const useHistory = <T>(initialState: T): [T, (action: SetStateAction<T>, overwrite?: boolean) => void, () => void] => {
+export const useHistory = <T>(initialState: T): [T, (action: SetStateAction<T>, overwrite?: boolean) => void, () => void, ()=>void] => {
   const [history, setHistory] = useState<T[]>([initialState]);
   const [index, setIndex] = useState(0);
 
@@ -36,6 +36,11 @@ export const useHistory = <T>(initialState: T): [T, (action: SetStateAction<T>, 
     }
   };
 
+  const clearHistory = () => {
+    setHistory([initialState]);
+    setIndex(0);
+  };
+
   // useEffect(() => {                                                       //socket logic
   //   socket.on('receiveStateUpdate', (newHistory: T[]) => {
   //     setHistory(newHistory);
@@ -47,5 +52,5 @@ export const useHistory = <T>(initialState: T): [T, (action: SetStateAction<T>, 
   //   };
   // }, []);
 
-  return [history[index], setState, undo];
+  return [history[index], setState, undo, clearHistory];
 };

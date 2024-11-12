@@ -64,7 +64,6 @@ const Notes: React.FC<NoteProps> = ({ deleteNote }) => {
       const newX = event.clientX - mouseOffset.x;
       const newY = event.clientY - mouseOffset.y;
 
-      // Get viewport dimensions
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
 
@@ -100,7 +99,7 @@ const Notes: React.FC<NoteProps> = ({ deleteNote }) => {
 
   const handleTextChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newText = event.target.value
-    setText(newText); // Update the text state
+    setText(newText); 
     console.log(text)
     // socket.emit('textChange', newText);                       //socket logic
   };
@@ -124,7 +123,7 @@ const Notes: React.FC<NoteProps> = ({ deleteNote }) => {
           className="editor"
           ref={textRef}
           value={text}
-          onChange={handleTextChange} // Set the text change handler
+          onChange={handleTextChange} 
           placeholder="Write your note here..."
         ></textarea>
       </div>

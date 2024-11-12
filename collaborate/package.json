@@ -1,0 +1,16 @@
+{
+  "name": "collaborate",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.1",
+    "otjs": "^1.2.1",
+    "socket.io": "^4.7.5"
+  }
+}

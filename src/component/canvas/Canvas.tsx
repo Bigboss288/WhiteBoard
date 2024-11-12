@@ -22,12 +22,19 @@ const Canvas = () => {
 
     useEffect(() => {
 
-        if (typeof window !== "undefined") {
-            setDimensions({
-                height: window.innerHeight,
-                width: window.innerWidth
-            })
+        const updateDimensions = () => {
+            if (typeof window !== "undefined") {
+                setDimensions({
+                    height: window.innerHeight,
+                    width: window.innerWidth
+                })
+            }
         }
+
+        updateDimensions()
+        window.addEventListener('resize', updateDimensions);
+
+        return () => window.removeEventListener('resize', updateDimensions);
 
     }, [])
 
@@ -36,88 +43,54 @@ const Canvas = () => {
         const context = canvas?.getContext("2d");
         context?.clearRect(0, 0, canvas!.width, canvas!.height);
         elements.forEach(({ elementType, canvasElement }) => drawElement(context!, elementType, canvasElement));
-        console.log(drawing)
+        console.log(elements)
     }, [elements])
 
 
-    // const handleMouseDown = (event: React.MouseEvent<HTMLCanvasElement | >) => {
-    //     if (elementType === "") return;
-    //     setDrawing(true);
-
-    //     const x = event.clientX;
-    //     const y = event.clientY;
-
-    //     const element = createElement(x, y, x, y, linearPath, elementType, color);
-    //     setElement((prevstate) => [...prevstate, element]);
-    // };
-
-
-    // const handleMouseMove = (
-    //     event: React.MouseEvent<HTMLCanvasElement>,
-    // ) => {
-
-    //     if (!drawing) return;
-
-    //     // Check if there are any elements to work with
-    //     const index = elements.length - 1;
-    //     if (index < 0) return; // Exit if no elements exist
-
-    //     const { clientX, clientY } = event;
-    //     if (elementType === "pen") setLinearpath((prev) => [...prev, { x: clientX, y: clientY }]);
-
-    //     const { x1, y1 } = elements[index];
-
-    //     const updateElement: Element = createElement(x1, y1, clientX, clientY, linearPath, elementType, color);
-
-    //     const elementCopy = [...elements];
-    //     elementCopy[index] = updateElement;
-    //     setElement(elementCopy, true); // Only pass the new state here
-    // };
-
-    // const handleMouseUp = () => {
-    //     if (!drawing) return;
-
-    //     setLinearpath([]);
-    //     setDrawing(false);
-    // };
-
-    const handlePointerDown = (event: React.PointerEvent<HTMLCanvasElement>) => {
+    const handlePointerDown = (event: React.PointerEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
         if (elementType === "") return;
         setDrawing(true);
-      
-        // Pointer event contains clientX and clientY, works for both mouse and touch
-        const x = event.clientX;
-        const y = event.clientY;
-      
+
+        // Extract x and y coordinates, handling both pointer and touch events
+        const x = 'clientX' in event ? event.clientX : event.touches[0].clientX;
+        const y = 'clientY' in event ? event.clientY : event.touches[0].clientY;
+
         const element = createElement(x, y, x, y, linearPath, elementType, color);
         setElement((prevstate) => [...prevstate, element]);
-      };
+        console.log("down", drawing);
+    };
 
-    const handlePointerMove = (event: React.PointerEvent<HTMLCanvasElement>) => {
+    const handlePointerMove = (event: React.PointerEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
         if (!drawing) return;
-    
-        // Check if there are any elements to work with
+
+        console.log("move", drawing);
+
         const index = elements.length - 1;
-        if (index < 0) return; // Exit if no elements exist
-      
-        const { clientX, clientY } = event;
-        if (elementType === "pen") setLinearpath((prev) => [...prev, { x: clientX, y: clientY }]);
-      
+        if (index < 0) return; 
+
+        const clientX = 'clientX' in event ? event.clientX : event.touches[0].clientX;
+        const clientY = 'clientY' in event ? event.clientY : event.touches[0].clientY;
+
+        if (elementType === "pen") {
+            setLinearpath((prev) => [...prev, { x: clientX, y: clientY }]);
+        }
+
         const { x1, y1 } = elements[index];
-      
+
         const updateElement: Element = createElement(x1, y1, clientX, clientY, linearPath, elementType, color);
-      
+
         const elementCopy = [...elements];
         elementCopy[index] = updateElement;
-        setElement(elementCopy, true); // Only pass the new state here
-      };
-      
-      const handlePointerUp = () => {
+        setElement(elementCopy, true);
+    };
+
+    const handlePointerUp = () => {
         if (!drawing) return;
-      
+
         setLinearpath([]);
         setDrawing(false);
-      };
+        console.log("up", drawing)
+    };
 
     const clearScreen = () => {
         const canvas = canvasRef.current;
@@ -130,7 +103,7 @@ const Canvas = () => {
         html2canvas(canvasRef.current!).then((canvas) => {
             const link = document.createElement('a');
             link.href = canvas.toDataURL('image/png');
-            link.download = 'screenshot' + Date.now() + '.png'; // Specify the file name
+            link.download = 'screenshot' + Date.now() + '.png'; 
             link.click();
         });
     };
@@ -153,8 +126,10 @@ const Canvas = () => {
                 onPointerDown={handlePointerDown}
                 onPointerMove={handlePointerMove}
                 onPointerUp={handlePointerUp}
-                onPointerCancel={handlePointerUp}
-                ></canvas>
+                onTouchStart={handlePointerDown}
+                onTouchMove={handlePointerMove}
+                onTouchEnd={handlePointerUp}
+            ></canvas>
         </div>
     )
 }
