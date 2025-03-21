@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import './panel.css'
-import { TwitterPicker } from 'react-color';
+import { CompactPicker } from 'react-color';
 import { ImageSrcType, imgSrc } from '@/data'
 
 interface PanelProps {
@@ -70,7 +70,7 @@ const Panel: React.FC<PanelProps> = ({set_color, set_element, open_note, undo, c
                 {
                     colortoggle &&
                     <div className='color-wrap'>
-                        <TwitterPicker color={color} onChange={color => selectColor(color.hex)}/>
+                        <CompactPicker color={color} onChange={color => selectColor(color.hex)}/>
                     </div>
                 }
             </div>

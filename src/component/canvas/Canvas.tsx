@@ -187,7 +187,7 @@ const createElement = (
             x2: x2,
             y2: y2,
             strokeStyle: color,
-            lineWidth: 1,
+            lineWidth: 2,
             isPen: true,
             path
         } as Line
