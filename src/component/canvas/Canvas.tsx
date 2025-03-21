@@ -176,7 +176,7 @@ const createElement = (
             height: y2 - y1,
             fillColor: 'white',
             borderColor: color,
-            borderWidth: 2,
+            borderWidth: 1,
         } as Rectangle
 
     } else {
@@ -246,9 +246,22 @@ const drawLine = (context: CanvasRenderingContext2D, line: Line) => {
     }
     else {
         context.beginPath();
+        // context.moveTo(line.x1, line.y1);
+        // context.lineTo(line.x2, line.y2);
+
+        //this is for arrow
+        const headlen = 10; // length of head in pixels
+        const dx = line.x2 - line.x1;
+        const dy = line.y2 - line.y1;
+        const angle = Math.atan2(dy, dx);
         context.moveTo(line.x1, line.y1);
         context.lineTo(line.x2, line.y2);
+        context.lineTo(line.x2 - headlen * Math.cos(angle - Math.PI / 6), line.y2 - headlen * Math.sin(angle - Math.PI / 6));
+        context.moveTo(line.x2, line.y2);
+        context.lineTo(line.x2 - headlen * Math.cos(angle + Math.PI / 6), line.y2 - headlen * Math.sin(angle + Math.PI / 6));
         context.stroke();
+
+        
     }
 };
 
