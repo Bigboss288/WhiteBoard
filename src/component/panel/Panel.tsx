@@ -31,6 +31,7 @@ const Panel: React.FC<PanelProps> = ({set_color, set_element, open_note, undo, c
         setshapeToggle(!shapetoggle)
         setShapeIcon(imgSrc[elementType])
         setShape("shape")
+        setcolorToggle(false)
     }
 
     const setPen = (elementType: string) => {
@@ -38,6 +39,15 @@ const Panel: React.FC<PanelProps> = ({set_color, set_element, open_note, undo, c
         setShapeIcon(imgSrc.shape)
         setShape(elementType)
         setshapeToggle(false)
+        setcolorToggle(false)
+    }
+
+    const setText = (elementType: string) => {
+        set_element(elementType)
+        setShapeIcon(imgSrc.shape)
+        setShape(elementType)
+        setshapeToggle(false)
+        setcolorToggle(false)
     }
 
     const selectColor = (color : string) => {
@@ -51,6 +61,7 @@ const Panel: React.FC<PanelProps> = ({set_color, set_element, open_note, undo, c
                 <div>
                     <button className={`button ${shape === "shape" && "active"}`}  onClick={() => setshapeToggle(!shapetoggle)}> <img src={shapeIcon} alt="" /> </button>
                     <button className={`button ${shape === "pen" && "active"}`} onClick={() => setPen("pen")}> <img src={imgSrc.pen} alt="" /> </button>
+                    <button className={`button ${shape === "text" && "active"}`} onClick={() => setText("text")}> <img src={imgSrc.pen} alt="" /> </button>
                     <button className="button" onClick={() => open_note()}> <img src={imgSrc.note} alt="" /></button>
                     <button className="button" style={{ backgroundColor: color, border: "none" }} onClick={() => setcolorToggle(!colortoggle)}></button>
                 </div>
@@ -65,6 +76,7 @@ const Panel: React.FC<PanelProps> = ({set_color, set_element, open_note, undo, c
                         <button className="button" onClick={() => setElement("rectangle")}> <img src={imgSrc.rectangle} alt="" /> </button>
                         <button className="button" onClick={() => setElement("circle")}> <img src={imgSrc.circle} alt="" /> </button>
                         <button className="button" onClick={() => setElement("line")}> <img src={imgSrc.line} alt="" /> </button>
+                        {/* <button className="button" onClick={() => setElement("line")}> <img src={imgSrc.line} alt="" /> </button> */}
                     </div>
                 }
                 {

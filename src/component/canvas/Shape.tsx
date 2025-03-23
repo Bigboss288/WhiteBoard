@@ -22,12 +22,12 @@ export type Rectangle = {
 };
 
 export type Circle = {
-    x: number;       // Center x-coordinate
-    y: number;       // Center y-coordinate
-    radius: number;  // Radius of the circle
-    fillColor: string; // Fill color of the circle
-    borderColor: string; // Border color of the circle
-    borderWidth: number; // Width of the circle's border
+    x: number;       
+    y: number;       
+    radius: number;  
+    fillColor: string; 
+    borderColor: string; 
+    borderWidth: number; 
 };
 
 export type Line = {
@@ -42,4 +42,21 @@ export type Line = {
     path: { x: number; y: number }[];
 };
 
-export type CanvasElement = Line | Circle | Rectangle
+export type Ellipse = {
+    x: number;       
+    y: number;       
+    radiusX: number;  
+    radiusY: number;
+    fillColor: string; 
+    borderColor: string; 
+    borderWidth: number; 
+};
+
+export type Text = {
+    letter : string,
+    x1: number;
+    y1: number;
+    typing: boolean;
+};
+
+export type CanvasElement = Line | Circle | Rectangle | Text | Ellipse
