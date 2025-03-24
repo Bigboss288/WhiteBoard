@@ -210,15 +210,7 @@ const createElement = (
         } as Line
 
     } else if (elementType === "circle") {
-        // canvasElement = {
-        //     x: x1,
-        //     y: y1,
-        //     radius: Math.abs(x2 - x1) * 2,
-        //     fillColor: 'white',
-        //     borderColor: color,
-        //     borderWidth: 1,
-        // } as Circle
-
+       
         canvasElement = {
             x: (x1 + x2) / 2, // Midpoint X (center of ellipse)
             y: (y1 + y2) / 2, // Midpoint Y (center of ellipse)
